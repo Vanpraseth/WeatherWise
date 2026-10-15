@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="WeatherWise — a calm, useful weather forecast for planning the hours ahead."
+    />
+    <meta name="theme-color" content="#f3f2ed" />
+    <title>WeatherWise — Forecast with context</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="WeatherWise home">
+          <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+            <rect x="1" y="1" width="42" height="42" rx="14" />
+            <path d="M9.5 15 14.6 31 22 17 29.4 31 34.5 15" />
+            <circle cx="34.5" cy="10.5" r="4.2" />
+          </svg>
+          <span class="brand-name">Weather<span>Wise</span></span>
+        </a>
+
+        <nav class="top-actions" aria-label="Weather controls">
+          <div class="unit-switch" aria-label="Temperature unit">
+            <button class="unit-button is-active" type="button" data-unit="celsius">°C</button>
+            <button class="unit-button" type="button" data-unit="fahrenheit">°F</button>
+          </div>
+          <button class="icon-button" id="use-location" type="button" aria-label="Use my current location" title="Use my current location">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+              <path d="M15.2 8.8 13.3 13l-4.5 2.2L10.7 11l4.5-2.2Z" />
+            </svg>
+          </button>
+          <button class="icon-button" id="favorite-button" type="button" aria-label="Save this location" title="Save this location">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z" />
+            </svg>
+          </button>
+        </nav>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow" id="today-label">FORECAST FOR TODAY</p>
+            <h1 id="page-title">Know what the day<br />has in store.</h1>
+          </div>
+
+          <div class="search-area">
+            <label class="search-box" for="city-search">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="m16 16 4 4" />
+              </svg>
+              <input
+                id="city-search"
+                type="search"
+                placeholder="Search a city or postcode"
+                autocomplete="off"
+                aria-autocomplete="list"
+                aria-controls="search-results"
+                aria-expanded="false"
+              />
+              <kbd>⌘ K</kbd>
+            </label>
+            <div class="search-results" id="search-results" role="listbox" hidden></div>
+            <p class="search-hint">Try “Melbourne”, “Tokyo”, or “New York”</p>
+          </div>
+        </section>
+
+        <div class="status-banner" id="status-banner" role="status" aria-live="polite" hidden>
+          <span class="status-spinner" aria-hidden="true"></span>
+          <span id="status-message">Loading forecast…</span>
+        </div>
+
+        <section class="weather-grid" id="weather-content" aria-label="Weather forecast">
+          <article class="current-card card">
+            <div class="current-topline">
+              <div>
+                <div class="location-line">
+                  <h2 id="location-name">Melbourne</h2>
+                  <span class="location-dot" aria-hidden="true"></span>
+                </div>
+                <p id="location-region">Victoria, Australia</p>
+              </div>
+              <p class="local-time" id="local-time">Local time —</p>
+            </div>
+
+            <div class="current-main">
+              <div class="temperature-wrap">
+                <span class="weather-icon weather-icon-large" id="current-icon" aria-hidden="true"></span>
+                <p class="temperature" id="current-temperature">--<sup>°</sup></p>
+              </div>
+              <div class="condition-copy">
+                <p class="condition" id="current-condition">Loading forecast</p>
+                <p class="feels-like" id="feels-like">Feels like --°</p>
+              </div>
+            </div>
+
+            <div class="current-bottom">
+              <p class="forecast-summary" id="forecast-summary">Preparing your local outlook…</p>
+              <div class="sun-times" aria-label="Sunrise and sunset">
+                <span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 14a6 6 0 0 1 12 0M12 3v3M4.9 7.9 7 10M19.1 7.9 17 10" /></svg>
+                  <span><small>Sunrise</small><strong id="sunrise-time">—</strong></span>
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 14a6 6 0 0 1 12 0M12 3v3M4.9 7.9 7 10M19.1 7.9 17 10" /></svg>
+                  <span><small>Sunset</small><strong id="sunset-time">—</strong></span>
+                </span>
+              </div>
+            </div>
+          </article>
+
+          <aside class="planning-card card" aria-labelledby="planning-title">
+            <div class="planning-heading">
+              <span class="score-ring" id="score-ring" aria-hidden="true"><strong id="score-value">--</strong></span>
+              <div>
+                <p class="eyebrow">OUTDOOR OUTLOOK</p>
+                <h2 id="planning-title">Plan your best hours</h2>
+              </div>
+            </div>
+            <p class="planning-copy" id="planning-copy">We’re checking the temperature, wind and rain to find your best time outside.</p>
+            <div class="best-window">
+              <span class="best-window-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 4v2M12 18v2M4 12H2M22 12h-2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg>
+              </span>
+              <span><small>BEST WINDOW</small><strong id="best-window-time">Calculating…</strong></span>
+            </div>
+          </aside>
+
+          <article class="hourly-card card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">NEXT 24 HOURS</p>
+                <h2>Hour by hour</h2>
+              </div>
+              <div class="hourly-legend">
+                <span><i class="legend-line"></i>Temperature</span>
+                <span><i class="legend-drop"></i>Rain chance</span>
+              </div>
+            </div>
+            <div class="hourly-scroll" id="hourly-forecast" tabindex="0" aria-label="Scrollable hourly forecast"></div>
+          </article>
+
+          <article class="details-card card">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">RIGHT NOW</p>
+                <h2>Weather details</h2>
+              </div>
+            </div>
+            <dl class="detail-list">
+              <div>
+                <dt><span class="detail-icon">↓</span> Rain</dt>
+                <dd id="rain-detail">--%</dd>
+              </div>
+              <div>
+                <dt><span class="detail-icon">≈</span> Wind</dt>
+                <dd id="wind-detail">-- km/h</dd>
+              </div>
+              <div>
+                <dt><span class="detail-icon">◌</span> Humidity</dt>
+                <dd id="humidity-detail">--%</dd>
+              </div>
+              <div>
+                <dt><span class="detail-icon">☼</span> UV index</dt>
+                <dd id="uv-detail">--</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="weekly-card card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">THE WEEK AHEAD</p>
+                <h2>7-day forecast</h2>
+              </div>
+              <p class="updated-label" id="updated-label">Updated just now</p>
+            </div>
+            <div class="weekly-list" id="weekly-forecast"></div>
+          </article>
+        </section>
+
+        <section class="saved-section" id="saved-section" aria-labelledby="saved-title" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">YOUR PLACES</p>
+              <h2 id="saved-title">Saved locations</h2>
+            </div>
+          </div>
+          <div class="saved-places" id="saved-places"></div>
+        </section>
+      </main>
+
+      <footer>
+        <p>Weather data from <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a></p>
+        <p>WeatherWise · Forecast with context</p>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>
