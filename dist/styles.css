@@ -571,6 +571,7 @@ kbd {
 }
 
 .score-ring {
+  position: relative;
   display: grid;
   flex: 0 0 auto;
   width: 68px;
@@ -590,8 +591,13 @@ kbd {
 
 .score-ring strong {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
   font-size: 17px;
   font-weight: 750;
+  line-height: 1;
 }
 
 .planning-heading .eyebrow,
